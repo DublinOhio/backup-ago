@@ -9,7 +9,9 @@ Download GIS and other content from ArcGIS Online Organizations to create copies
 ## Requirements
 - ArcGIS Online Organizational Account  
 - ArcGIS API for Python
-- Jupyter Lab (Installed via Conda) used for development, will potentially be changed to run in base Python
+- JupyterLab (Installed via Conda) 
+-- Used for development, will potentially be changed to run in base Python
+-- JupyterLab has a lot of requirements and makes this script heavier than it needs to be
 
 ## Project Setup
 This project uses a hidden environment file named ".env" in the root directory. This file is ignored (by .gitignore method) so you must create this file in the root directory and add variable features.
@@ -21,7 +23,7 @@ Install [ArcGIS API for Python](https://developers.arcgis.com/python/guide/insta
 - For example, [using Anaconda](https://developers.arcgis.com/python/guide/install-and-set-up/).
 -- Download Anaconda, create a new environment, install ArcGIS API for Python via `conda install -c esri arcgis`
 
-Install [Jupyter Lab](https://jupyterlab.readthedocs.io/en/stable/getting_started/installation.html)
+Install [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/getting_started/installation.html)
 - `conda install -c conda-forge jupyterlab`
 
 Create `.env` file
