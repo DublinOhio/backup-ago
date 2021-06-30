@@ -18,6 +18,7 @@ This project uses a hidden environment file named ".env" in the root directory. 
 
 
 ## Setup
+Clone (download) this project)  
 
 Install [ArcGIS API for Python](https://developers.arcgis.com/python/guide/install-and-set-up/)
 - For example, [using Anaconda](https://developers.arcgis.com/python/guide/install-and-set-up/).  
