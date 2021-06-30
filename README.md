@@ -36,5 +36,8 @@ Set Environment varaibles
 - save location
 - search parameters to backup
 
-## Run
 
+## Run
+- Run Jupyter Lab, open notebook, run all cells.  
+-- `conda activate env-name` then `cd path-to-project` then `jupyter lab`  
+-- run the notebook. 
