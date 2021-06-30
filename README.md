@@ -20,10 +20,10 @@ This project uses a hidden environment file named ".env" in the root directory. 
 ## Setup
 
 Install [ArcGIS API for Python](https://developers.arcgis.com/python/guide/install-and-set-up/)
-- For example, [using Anaconda](https://developers.arcgis.com/python/guide/install-and-set-up/).
+- For example, [using Anaconda](https://developers.arcgis.com/python/guide/install-and-set-up/).  
 -- Download Anaconda, create a new environment, install ArcGIS API for Python via `conda install -c esri arcgis`
 
-Install [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/getting_started/installation.html)
+Install [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/getting_started/installation.html)  
 - `conda install -c conda-forge jupyterlab`
 
 Create `.env` file
