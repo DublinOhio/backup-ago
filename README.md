@@ -18,6 +18,7 @@ This project uses a hidden environment file named ".env" in the root directory. 
 
 
 ## Setup
+Clone (download) this project)  
 
 Install [ArcGIS API for Python](https://developers.arcgis.com/python/guide/install-and-set-up/)
 - For example, [using Anaconda](https://developers.arcgis.com/python/guide/install-and-set-up/).  
@@ -36,5 +37,8 @@ Set Environment varaibles
 - save location
 - search parameters to backup
 
-## Run
 
+## Run
+- Run Jupyter Lab, open notebook, run all cells.  
+-- `conda activate env-name` then `cd path-to-project` then `jupyter lab`  
+-- run the notebook. 
