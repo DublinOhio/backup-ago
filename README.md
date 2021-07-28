@@ -39,6 +39,11 @@ Set Environment varaibles
 
 
 ## Run
+Can be run as a Python file i.e. scheduled with Windows Task Scheduler or interactively in a Jupyter Lab notebooks.
+
+Development was done in Jupyter Lab then exported to Python.
 - Run Jupyter Lab, open notebook, run all cells.  
 -- `conda activate env-name` then `cd path-to-project` then `jupyter lab`  
 -- run the notebook. 
+**OR **
+- Run Python .py version of the file on demand or via Task Scheduler
