@@ -1,0 +1,18 @@
+# Rename this file to simply ".env"
+#   The full file name should be ".env" with no characters before the "." 
+#	Ensure it also no longer has the .txt extension
+#
+# Enter in your confirugation below
+#   It contains credentials that will be referenced by the main script
+#   The .gitignore file explictly tells Git to not publish this file.
+
+
+# AGO / Portal credentials
+GIS_USER="UserNameHere"
+GIS_PASSWORD="YourPasswordHere"
+
+# Folder name on AGO or Portal holding file geodatabases to backup
+ORIGIN_FOLDER="GIS Layers Backups"
+
+# Local destionation folder
+DEST_FOLDER="C:\TempDataExport"
