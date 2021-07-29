@@ -22,14 +22,19 @@ Clone (download) this project)
 
 Install [ArcGIS API for Python](https://developers.arcgis.com/python/guide/install-and-set-up/)
 - For example, [using Anaconda](https://developers.arcgis.com/python/guide/install-and-set-up/).  
--- Download Anaconda, create a new environment, install ArcGIS API for Python via `conda install -c esri arcgis`
+-- Download Anaconda, create a new environment, install ArcGIS API for Python via `conda install -c esri arcgis`  
+-- Can alternatively use Miniconda.
+
+Install [dotenv](https://anaconda.org/conda-forge/python-dotenv) library in conda
+- `conda install -c conda-forge python-dotenv`
 
 Install [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/getting_started/installation.html)  
-- `conda install -c conda-forge jupyterlab`
+- `conda install -c conda-forge jupyterlab`  
+- (Optional, included with Anaconda full install)
 
 Create `.env` file
 - This file will hold credentials and other environment variables in the script.
-- Create a file named `.env` in the root directory using the template
+- Create a file named `.env` in the root directory using the template. You can rename the template to `.env`.  
 - Plug in environment varaibles for credentials
 
 Set Environment varaibles
