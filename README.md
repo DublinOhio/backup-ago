@@ -19,15 +19,18 @@ This project uses a hidden environment file named ".env" in the root directory. 
 ## Setup
 Clone (download) this project.  
 
-Create a Python environment for the project (Strongly Recommended).
+Create a Python environment for the project (**strongly recommended**).
 - You can install the libraries into your base Python environment; however, it is probably better to create a separate environment for projects
-- I.e. using [Conda](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
-- Activate the environment and install required libraries below.
+- Example using [Conda](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) shown below.
 - You will use this specified environment in your task scheduler.
+- Launch conda command prompt then `conda create --name envname` which creatse a new env by default in `C:\Users\username\Anaconda3\envs`
+
+Activate the new environment
+- `conda activate envname` [docs](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment)  
 
 Install [ArcGIS API for Python](https://developers.arcgis.com/python/guide/install-and-set-up/)
 - For example, [using Anaconda](https://developers.arcgis.com/python/guide/install-and-set-up/).  
--- Download Anaconda, create a new environment, install ArcGIS API for Python via `conda install -c esri arcgis`  
+-- `conda install -c esri arcgis`  
 -- Can alternatively use Miniconda.
 
 Install [dotenv](https://anaconda.org/conda-forge/python-dotenv) library in conda
