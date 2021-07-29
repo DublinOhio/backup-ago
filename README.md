@@ -16,9 +16,14 @@ Download GIS and other content from ArcGIS Online Organizations to create copies
 ## Project Setup
 This project uses a hidden environment file named ".env" in the root directory. This file is ignored (by .gitignore method) so you must create this file in the root directory and add variable features.
 
-
 ## Setup
-Clone (download) this project)  
+Clone (download) this project.  
+
+Create a Python environment for the project (Strongly Recommended).
+- You can install the libraries into your base Python environment; however, it is probably better to create a separate environment for projects
+- I.e. using [Conda](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html)
+- Activate the environment and install required libraries below.
+- You will use this specified environment in your task scheduler.
 
 Install [ArcGIS API for Python](https://developers.arcgis.com/python/guide/install-and-set-up/)
 - For example, [using Anaconda](https://developers.arcgis.com/python/guide/install-and-set-up/).  
