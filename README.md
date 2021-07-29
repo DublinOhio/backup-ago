@@ -52,3 +52,4 @@ Development was done in Jupyter Lab then exported to Python.
 -- run the notebook. 
 **OR **
 - Run Python .py version of the file on demand or via Task Scheduler
+- **Be sure to use the Python environment with the installed ArcGIS and dotenv libraries** (i.e. using the Ana/Miniconda distribution here).
