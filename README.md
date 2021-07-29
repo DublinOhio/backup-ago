@@ -7,11 +7,15 @@
 Download GIS and other content from ArcGIS Online Organizations to create copies for backup and historical purposes. ArcGIS Online does not support archiving and history tracking like SDE databases so this process will provide that functionality. 
 
 # Requirements
+
 - ArcGIS Online Organizational Account  
-- ArcGIS API for Python
-- JupyterLab (Installed via Conda) 
+- Python 3.7+ with libraries:  
+-- ArcGIS API for Python  
+-- dotenv
+
+- JupyterLab (installed via Conda) 
 -- Used for development, will potentially be changed to run in base Python
--- JupyterLab has a lot of requirements and makes this script heavier than it needs to be
+-- Note: JupyterLab has a lot of requirements and makes this script heavier than it needs to be
 
 # Project Setup
 
