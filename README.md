@@ -9,9 +9,10 @@ Download GIS and other content from ArcGIS Online Organizations to create copies
 # Requirements
 
 - ArcGIS Online Organizational Account  
-- Python 3.7+ with libraries:  
+- Python 3.7+ (version 3.7.10 used at time of writing) with libraries:  
 -- ArcGIS API for Python  
--- dotenv
+-- dotenv  
+
 
 - JupyterLab (installed via Conda) 
 -- Used for development, will potentially be changed to run in base Python
@@ -35,9 +36,11 @@ Install [ArcGIS API for Python](https://developers.arcgis.com/python/guide/insta
 - Example, [using Anaconda](https://developers.arcgis.com/python/guide/install-and-set-up/):
 -- `conda install -c esri arcgis`  
 -- Can alternatively use Miniconda.
+- version 1.9.0 used at time of writing
 
 Install [dotenv](https://anaconda.org/conda-forge/python-dotenv)
 - `conda install -c conda-forge python-dotenv`
+- version 0.19.0 used at time of writing
 
 Install [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/getting_started/installation.html) (Optional)
 - `conda install -c conda-forge jupyterlab`  
