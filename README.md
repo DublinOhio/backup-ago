@@ -19,8 +19,17 @@ Download GIS and other content from ArcGIS Online Organizations to create copies
 -- Note: JupyterLab has a lot of requirements and makes this script heavier than it needs to be
 
 # Project Setup
+## Setup Creation of Backups on ArcGIS Online
+Prep data on ArcGIS Online or Enterprise
+- Tag layers with special tag for backups, i.e. "HFLBackupIncludeYes"
+- Create folder of layers to be backed up and move layers to this folder; otherwise simply query for the tag in later steps rather than this folder
+- Create a hosted notebook on AGO or Enterprise
+- Copy the code from the provided template in \CreateBackupsHostedNotebook folder of this project
+- Edit the query parameters for your user, folder holding layer to backup, and destination folder for backups
+- Test and run the notebook, ensuring backups are created as desired
+- Schedule the notebook to run as needed offset from the download process in the next section 
 
-## Install Requirements
+## Local Process for Downloading Backups Install Requirements
 Clone (download) this project.  
 
 Create a Python environment for the project (**strongly recommended**).
