@@ -19,7 +19,7 @@
 
 # ### Imports
 
-# In[89]:
+# In[1]:
 
 
 import os
@@ -32,7 +32,11 @@ import time
 # need to be able to round up
 from math import ceil 
 
-##import pandas as pd
+import numpy as np
+
+from tabulate import tabulate
+
+import pandas as pd
 
 from arcgis.gis import GIS
 from arcgis import __version__
@@ -40,26 +44,65 @@ from arcgis import __version__
 
 # # Your custom variables
 
-# In[65]:
+# In[2]:
 
 
 # id for the folder where backups are stored.
 backups_folder = "f74cc94ec1dc4ac8b8a16742c799b4fb"
+backup_tag = "HFLBackupIncludeYes"
+
+# group ID used to email results
+GIS_staff_group_id = "81d7f67d885c4e629b4c5d49309b9e25"
 
 
 # #### initialize GIS
 
-# In[2]:
+# In[3]:
 
 
 gis = GIS("home")
 
 
+# # Setup email notifications (by group membership)
+# 
+# 
+
+# ## Send notification
+# 
+
+# In[4]:
+
+
+timestamp = strftime("%m-%d-%Y%  %H%:M")
+
+def email_GIS_staff(GISStaffGroupID, subject_, message_):
+
+    # define group
+    GIS_staff_group = gis.groups.search(GISStaffGroupID)[0]
+    
+    # get members 
+    users_ = GIS_staff_group.get_members()["users"]
+    print("Notifying users:\n\t", users_)
+    
+    # send email
+    did_it_work = GIS_staff_group.notify(users_, subject = subject_, message = message_)
+    
+    # call the function
+    # email_GIS_staff(GIS_Staff_Group_ID, 
+    #                subject_= email_subject, 
+    #                message_ = "Time started: "+ timestamp + email_message)    
+    
+    print("\n\tEmail sent?:", did_it_work)
+
+
+# ### References
+# https://community.esri.com/t5/arcgis-notebooks-documents/send-e-mail-notifications-with-arcgis-notebooks/ta-p/1329699
+
 # # Search for all file geodatabases
 # 
 # We'll refine this list to delete previous backups in the backup folder next.
 
-# In[66]:
+# In[6]:
 
 
 allmyfgdbs = gis.content.search("owner:DublinOhio", max_items = 2000, item_type = "File Geodatabase")
@@ -67,7 +110,7 @@ allmyfgdbs = gis.content.search("owner:DublinOhio", max_items = 2000, item_type 
 len(allmyfgdbs)
 
 
-# In[67]:
+# In[7]:
 
 
 allmyfgdbs[:10] # first 10 
@@ -77,43 +120,46 @@ allmyfgdbs[:10] # first 10
 # 
 # Search all filegeodatabases, find those that are already in the backup folder
 
-# In[85]:
+# In[ ]:
 
 
-def get_items_in_bkflder(itemlist = allmyfgdbs):
+def get_items_in_bkflder():
     
     ######
     # INPUT: list of all file geodatabses
-    # OUTPUT: list of file geodatabaes in the backup folders
+    # OUTPUT: list of file geodatabaes in the backup folders or ones with backuptag. 
+    # A FGDB with the backuptag still probably failed to move from the home folder
+    # 
     
     ######
+    itemlist = gis.content.search("owner:DublinOhio", max_items = 2000, item_type = "File Geodatabase")
     
-    items_in_bkflder = []
+    items_in_backupkfolder = []
 
     for item in itemlist:
 
         # folder id for GIS Layers Backups. 
         # this is finding all the existing backups that are in that specified folder
         if item["ownerFolder"] == backups_folder:
-            items_in_bkflder.append(item)
+            items_in_backupkfolder.append(item)
             
-    print("Length of items in backup folder: ", len(items_in_bkflder))
+    print("Length of items in backup folder: ", len(items_in_backupkfolder))
     
-    return items_in_bkflder
+    return items_in_backupkfolder
 
 
-# In[86]:
+# In[9]:
 
 
-get_items_in_bkflder()
+items_in_bkflder = get_items_in_bkflder()
 
 
 # Then, delete them, in batches of 100
 
-# In[87]:
+# In[10]:
 
 
-def backupDeleter(list_of_items_to_delete):
+def backupDeleter(list_of_items_to_delete, list_all_fgdbs = allmyfgdbs):
         
     ######
     # INPUT: list of items to delete
@@ -148,11 +194,15 @@ def backupDeleter(list_of_items_to_delete):
                 print("An exception occurred:", error) 
                 
             print("\tBatch complete")
+            
+        ## Check if succesfully deleted all. 
         
-        if len(list_of_items_to_delete) > 0:
+        new_list_of_items_to_delete = get_items_in_bkflder()
+        
+        if len(new_list_of_items_to_delete) > 0:
             print("\tResult:\t!!!Hey there's still backups in the backup folder that weren't deleted!!!")
 
-        elif len(list_of_items_to_delete) == 0:
+        elif len(new_list_of_items_to_delete) == 0:
             print("\tResult:\tPrevious backup deletion completed, len(items_in_bkflder) == 0")
 
     elif n_backups == 0:
@@ -161,7 +211,7 @@ def backupDeleter(list_of_items_to_delete):
     
 
 
-# In[88]:
+# In[11]:
 
 
 backupDeleter(items_in_bkflder)
@@ -174,10 +224,10 @@ backupDeleter(items_in_bkflder)
 # 
 # otherwise the created GDBs may be included and backup content that does not need to be.
 
-# In[81]:
+# In[12]:
 
 
-def makeBkupList(backupTag = "HFLBackupIncludeYes"):
+def makeBkupList(backupTag = backup_tag):
     
     ######
     # INPUT: tag that identifies feature layers for backups
@@ -194,31 +244,28 @@ def makeBkupList(backupTag = "HFLBackupIncludeYes"):
     return bkupContentList
 
 
-# In[99]:
+# In[13]:
 
 
 # make a list of items to backup by the tag specified.
 
-items_to_backup = makeBkupList(backupTag = "HFLBackupIncludeYes")
+items_to_backup = makeBkupList(backupTag = backup_tag)
 
 items_to_backup
 
 
-# In[100]:
+# In[14]:
 
 
-len(items_to_backup)
-
-
-# In[101]:
-
-
-len(set(items_to_backup))
+if len(items_to_backup) == len(set(items_to_backup)):
+    print("All items to backup are unique")
+else:
+    print("CAUTION: There are some duplicate item names in the back-up list")
 
 
 # # Function to Create the Backups
 
-# In[109]:
+# In[15]:
 
 
 # Source framework, expanded upon.
@@ -232,9 +279,17 @@ def backupItems(bkupList = items_to_backup, bkupFolder = backups_folder): # back
     # PROCESS: 
     # - Creats backup file geodatabses (in the home folder)
     # - moves them to backup folder
-    # OUTPUT: returns list of output item IDs and messaging for processes
+    # OUTPUT: 
+    # - returns list of output item IDs and messaging for processes
+    # - returns list of items that failed export or move
     
     ######
+    outputItemIDs = []
+    outputItemTitles = []
+    
+    item_export_result = [] # hold result of trying to export
+    items_move_result = [] # hold result of trying to move
+
     
     timestamp = strftime("%Y%m%dT%H%M%S")
     t = time.process_time()
@@ -242,37 +297,52 @@ def backupItems(bkupList = items_to_backup, bkupFolder = backups_folder): # back
     # for naming timestamp in ISO 8601 compliant 
     print("Timestamp is {}\nExporting {} items to destination {}\n\n".format(timestamp, len(bkupList), bkupFolder))
     
-    outputItemIDs = []
-    outputItmeNames = []
     
+    # for index, item, in the backup list.
     for idx, item in enumerate(bkupList):
+        
+        # purge result variable name, otherwise if one fails it will report back the previous iteration's ID #
+        if 'result' in locals():
+            
+            del result 
         
         try:
     
             dataitem = gis.content.get(item.id)
             print("Processing item: ", item, "ID: ", dataitem)
+            
+            outputItemTitles.append(item.title)
+            outputItemIDs.append(item.id)
 
             try:
                 print("\tExporting item")
                 result = dataitem.export(item.title, "File Geodatabase", parameters = None)
                 print("\tExporting item complete")
+                
+                item_export_result.append("Success")
+                
             except Exception as error:
                 print("Failed Exporting Item", error)
+                item_export_result.append(error) # add item to failed list
                 
 # may need to move this to a separate function. 
             try:
                 print("\tMoving item to", bkupFolder)
                 result.move(bkupFolder)
                 print("\tMoving item complete")
+                items_move_result.append("Success")
+                
             except Exception as error:
                 print("Failed to move item ", error)
+                items_move_result.append(error) # add item to failed list
+
 
             print("\tItem {} of total {} complete".format((idx + 1), len(bkupList)))
 
             print("\tID of backup", result.id)
             print("\n******\n")
-            outputItemIDs.append(result.id)
-        
+            
+ 
         except Exception as error:
             print("Failed somewhere. ", error)
     
@@ -285,8 +355,133 @@ def backupItems(bkupList = items_to_backup, bkupFolder = backups_folder): # back
     for item in outputItemIDs:
         i = gis.content.get(item)
         print("\t", i.title, " ID --->\t", i.id)
-    return outputItemIDs
+        
+    return outputItemTitles, outputItemIDs, item_export_result, items_move_result
     
+
+
+# # Run the Backups
+
+# In[ ]:
+
+
+# testing with first 10 items, :10
+backups = backupItems(items_to_backup, backups_folder)
+
+
+# In[ ]:
+
+
+backups
+
+
+# In[ ]:
+
+
+np.transpose(backups)
+
+
+# In[ ]:
+
+
+results_df = pd.DataFrame(np.transpose(backups), columns = ["title", "id", "export", "moved"])
+results_df
+
+
+# add links
+results_df = results_df.assign(Link = lambda x: ("https://dublinohio.maps.arcgis.com/home/item.html?id="+x['id'] ))
+
+
+results_df
+
+
+
+# In[ ]:
+
+
+n_rows = results_df.shape[0]
+
+n_success = sum(results_df["export"]== "Success")
+
+n_failed = n_rows - n_success
+
+per_succes = (n_success *1.0 / n_rows)*100
+
+
+# In[ ]:
+
+
+per_succes
+
+
+# ### Format as HTML table for email 
+# 
+# get some stats first
+
+# In[ ]:
+
+
+[n_rows,n_success, n_failed, per_succes]
+
+
+# In[ ]:
+
+
+summ_df = pd.DataFrame([[n_rows,n_success, n_failed, per_succes]], columns = ["Items", "Success", "Failed", "Percent Success"])
+summ_df
+
+
+# In[108]:
+
+
+message_ = ("Total Items: {}|\n  \tSuccesses:\t {}| \n\tFailed:\t\t {}| \n\tPercent Success:\t {}|\n").format(n_rows, n_success, n_failed, per_succes)
+
+print(message_)
+
+
+# In[ ]:
+
+
+message_ = summ_df.to_html()
+
+
+# In[ ]:
+
+
+message_ += results_df.to_html(
+    render_links=True,
+    escape=True,
+)
+#message_
+
+
+# In[ ]:
+
+
+message_
+
+
+# In[ ]:
+
+
+strftime("%m-%d-%Y  %H:%M")
+
+
+# In[ ]:
+
+
+# Send email
+
+email_subject = "Backup Results"
+
+email_message = message_
+
+timestamp = strftime("%m-%d-%Y  %H:%M")
+
+# call the function
+email_GIS_staff(GIS_staff_group_id, 
+                subject_= email_subject + " " + strftime("%m-%d-%Y  %H:%M"), 
+                message_ = email_message)
 
 
 # # Function to Clean up content 
@@ -308,12 +503,17 @@ def backupItems(bkupList = items_to_backup, bkupFolder = backups_folder): # back
 # 	 ['Test', 'IncludeInBackups']
 # ```
 
-# In[103]:
+# In[ ]:
 
 
-def removeBkupTag(TagList, removeTags = ["HFLBackupIncludeYes"]):
-    # Defined a default tag HFLBackupIncludeYes but this can be any list of tags.
 
+
+
+# In[ ]:
+
+
+def removeBkupTag(TagList, removeTags = [backup_tag]):
+    # Defined a default tag i.e. HFLBackupIncludeYes but this can be any list of tags.
     
     tagsClean = [n for n in TagList if n not in removeTags]
     
@@ -322,7 +522,7 @@ def removeBkupTag(TagList, removeTags = ["HFLBackupIncludeYes"]):
     return tagsClean
 
 
-# In[104]:
+# In[ ]:
 
 
 def updateTags(itemID):
@@ -343,7 +543,7 @@ def updateTags(itemID):
     print("\tConfirmed: tags after update:\n\t", item.tags)
 
 
-# In[105]:
+# In[ ]:
 
 
 def removeBackupTagsFromBackups(backupResults):
@@ -351,30 +551,12 @@ def removeBackupTagsFromBackups(backupResults):
         updateTags(item)
 
 
-# # Run the Backups
-
-# In[107]:
-
-
-# make a list of items to backup by the tag specified.
-
-items_to_backup = makeBkupList(backupTag = "HFLBackupIncludeYes")
-
-items_to_backup
-
-
-# In[ ]:
-
-
-backups = backupItems(items_to_backup, backups_folder)
-
-
 # In[ ]:
 
 
 # maybe do this inside the backup process rather than after?  remove the tag right then and there?
 
-def removeBkupTagList(backupTag = "HFLBackupIncludeYes"):
+def removeBkupTagList(backupTag = backup_tag):
     print("Searching for content with tag: ", backupTag)
     bkupContentList = gis.content.search(query="tags:"+ backupTag, 
                                 item_type="File Geodatabase",  
@@ -393,7 +575,7 @@ def removeBkupTagList(backupTag = "HFLBackupIncludeYes"):
 # In[ ]:
 
 
-removelist = removeBkupTagList(backupTag = "HFLBackupIncludeYes")
+removelist = removeBkupTagList(backupTag = backup_tag)
 
 
 # In[ ]:
@@ -461,9 +643,3 @@ removeBackupTagsFromBackups(removelist)
 #  'type': 'File Geodatabase',
 #  'typeKeywords': ['File Geodatabase'],
 #  'url': None}```
-
-# In[ ]:
-
-
-
-
